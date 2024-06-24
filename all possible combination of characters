@@ -1,0 +1,25 @@
+#include <stdio.h>
+
+char lists[10][10] = {"", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+int n;
+
+void printCombinations(char number[], int current_digit, char result[]) {
+    if (current_digit == n) {
+        printf("%s\n", result);
+        return;
+    }
+
+    for (int i = 0; i < strlen(lists[number[current_digit] - '0']); i++) {
+        result[current_digit] = lists[number[current_digit] - '0'][i];
+        printCombinations(number, current_digit + 1, result);
+    }
+}
+
+int main() {
+    char number[] = "234";
+    n = strlen(number);
+    char result[n + 1];
+    result[n] = '\0';
+    printCombinations(number, 0, result);
+    return 0;
+}

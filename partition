@@ -1,0 +1,61 @@
+#include <stdio.h>
+
+int main() {
+    int S[] = {7, 3, 5, 12, 2, 1, 5, 3, 8, 4, 6, 4};
+    int k = 2;
+    int n = sizeof(S) / sizeof(S[0]);
+    int sum = 0;
+
+    for (int i = 0; i < n; i++) {
+        sum += S[i];
+    }
+
+    if (sum % k != 0) {
+        printf("Partition not possible");
+        return 0;
+    }
+
+    int subsetSum = sum / k;
+    int dp[n + 1][subsetSum + 1];
+
+    for (int i = 0; i <= n; i++) {
+        dp[i][0] = 1;
+    }
+
+    for (int i = 1; i <= subsetSum; i++) {
+        dp[0][i] = 0;
+    }
+
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= subsetSum; j++) {
+            dp[i][j] = dp[i - 1][j];
+            if (S[i - 1] <= j) {
+                dp[i][j] |= dp[i - 1][j - S[i - 1]];
+            }
+        }
+    }
+
+    if (dp[n][subsetSum] == 0) {
+        printf("Partition not possible");
+        return 0;
+    }
+
+    printf("S1 = {");
+    int i = n, j = subsetSum;
+    while (i > 0 && j > 0) {
+        if (dp[i - 1][j] == 0) {
+            printf(" %d,", S[i - 1]);
+            j -= S[i - 1];
+        }
+        i--;
+    }
+    printf(" }\nS2 = {");
+    for (int i = 0; i < n; i++) {
+        if (S[i] != 0) {
+            printf(" %d,", S[i]);
+        }
+    }
+    printf(" }\n");
+
+    return 0;
+}
